@@ -5,7 +5,7 @@ Another Metaverse Toolkit (AMET) is a Web 3.0 Virtual Reality (VR) Metaverse sys
     
 AMET is written on top of its own web server: Code.J.  The Code.J web server was written to support Metaverse systems and is influenced by (but is not compatible with) Node.JS.
     
- Although Code.J is written in Java rather than JS, creation of web services in Code.J is more similar to Node.JS than it is to any Java Servlet implementation.  Oh the other hand,
+ Although Code.J is written in Java rather than JS, creation of web services in Code.J is more similar to Node.JS than it is to any Java Servlet implementation.  On the other hand,
     Code.J does not require the use of Yarn to generate a running web server.  Code.J relies on features built into the Eclipse IDE to replace Yarn.  Code.J executes on top of
     Eclipse RCP.
     
