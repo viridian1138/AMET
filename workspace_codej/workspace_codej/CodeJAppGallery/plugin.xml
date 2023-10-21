@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="CodeJGallery.Participant" name="CodeJGallery.Participant" schema="schema/CodeJGallery.Participant.exsd"/>
+   <extension
+         point="CodeJCore.MetaverseApplication">
+      <client
+            class="codejappgallery.handlers.GalleryApp">
+      </client>
+   </extension>
+
+
+</plugin>

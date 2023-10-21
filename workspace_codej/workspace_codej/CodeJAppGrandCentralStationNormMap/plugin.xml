@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="CodeJSvr.HttpHandlers">
+      <client
+            class="codejappgrandcentralstationnormmap.handlers.TextureMapIHandler">
+      </client>
+   </extension>
+   <extension
+         point="CodeJSvr.HttpHandlers">
+      <client
+            class="codejappgrandcentralstationnormmap.handlers.NormIHandler">
+      </client>
+   </extension>
+
+
+</plugin>

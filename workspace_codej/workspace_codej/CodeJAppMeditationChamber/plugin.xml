@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="MeditationChamber"
+         name="MeditationChamber"
+         point="CodeJCore.MetaverseApplication">
+      <client
+            class="codejappmeditationchamber.handlers.MeditationChamberApp">
+      </client>
+   </extension>
+
+</plugin>

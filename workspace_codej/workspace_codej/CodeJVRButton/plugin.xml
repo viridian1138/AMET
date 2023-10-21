@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="VRButtonHandler"
+         point="CodeJSvr.HttpHandlers">
+      <client
+            class="codejvrbutton.handlers.VRButtonIHandler">
+      </client>
+   </extension>
+   <extension
+         point="CodeJCore.UiApplicationDependency">
+      <client
+            class="codejvrbutton.handlers.VRButtonImport">
+      </client>
+   </extension>
+
+</plugin>

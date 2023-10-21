@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CoreJAppAnimatedCubes
+Bundle-SymbolicName: CodeJAppAnimatedCubes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: corejappanimatedcubes.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ CodeJCore;bundle-version="1.0.0",
+ CodeJQuery;bundle-version="1.0.0",
+ CodeJThree;bundle-version="1.0.0",
+ CodeJAppAnimatedCubesNormMap;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: CoreJAppAnimatedCubes
+Bundle-ActivationPolicy: lazy

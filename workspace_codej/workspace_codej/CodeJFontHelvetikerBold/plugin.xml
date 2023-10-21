@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="CodeJSvr.HttpHandlers">
+      <client
+            class="codejfonthelvetikerbold.handlers.FontIHandler">
+      </client>
+   </extension>
+   <extension
+         point="CodeJCore.Font">
+      <client
+            class="codejfonthelvetikerbold.handlers.FontHelvetikerBold">
+      </client>
+   </extension>
+   <extension
+         point="CodeJSvr.HttpHandlers">
+      <client
+            class="codejfonthelvetikerbold.handlers.FontResponseIHandler">
+      </client>
+   </extension>
+
+
+</plugin>
