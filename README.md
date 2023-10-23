@@ -12,30 +12,37 @@ AMET is written on top of its own web server: Code.J.  The Code.J web server was
  Acknowledgments:
     
  Uses a modified version of THREE.JS by mrdoob
+
 Source: https://github.com/mrdoob/three.js/
     
     
 Uses Google JQuery
+
 Source:  https://github.com/jquery/jquery</a></li>
 
  
 Uses the Helvetiker Bold font
+
 Source: https://web.archive.org/web/20050528114140/https://ellak.gr/fonts/mgopen/index.en
 
     
 Uses the Commodore Amiga font from scoder.net
+
 Source:  https://scoder.net/?Topic=8222
   
     
 Uses the Kenney Future font from www.kenney.nl
+
 Source:  https://www.kenney.nl/assets/kenney-fonts
  
     
 Uses the Kenney Pixel font from www.kenney.nl
+
 Source:  https://www.kenney.nl/assets/kenney-fonts
     
     
 Draws from multiple instances of THREE.JS example code, with an eye to giving more of an integrated framework as opposed to separate examples
+
 Source:  https://threejs.org/examples/
  
     
