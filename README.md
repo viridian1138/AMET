@@ -35,6 +35,10 @@ Uses the Kenney Pixel font from www.kenney.nl
 Source:  https://www.kenney.nl/assets/kenney-fonts
     
     
+Draws from multiple instances of THREE.JS example code, with an eye to giving more of an integrated framework as opposed to separate examples
+Source:  https://threejs.org/examples/
+ 
+    
 License:
     
 
