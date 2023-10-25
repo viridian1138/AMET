@@ -34,18 +34,23 @@ Source:  https://scoder.net/?Topic=8222
 Uses the Kenney Future font from www.kenney.nl
 
 Source:  https://www.kenney.nl/assets/kenney-fonts
- 
-    
+
+   
 Uses the Kenney Pixel font from www.kenney.nl
 
 Source:  https://www.kenney.nl/assets/kenney-fonts
-    
-    
+ 
+   
+   Uses textures by rubberduck that are in the Public Domain under Creative Commons license
+  
+ Source: https://opengameart.org/content/50-free-textures-4-normalmaps
+
+   
 Draws from multiple instances of THREE.JS example code, with an eye to giving more of an integrated framework as opposed to separate examples
 
 Source:  https://threejs.org/examples/
- 
-    
+
+  
 License:
     
 
