@@ -78,6 +78,11 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	protected TextWidget titleTextWidget = null;
 
 	/**
+	 * Widget for displaying the SmashWnd run time
+	 */
+	protected TextWidget smashWndTimeTextWidget = null;
+
+	/**
 	 * Center bucket Widget
 	 */
 	protected BoxWidget bucketL2Widget = null;
@@ -108,9 +113,14 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	protected Material prismWidgetMaterial = null;
 
 	/**
-	 * Prototype test apply button widget
+	 * The current SmashWnd run time in seconds
 	 */
-	protected AbstractPushbuttonWidget applyButton = null;
+	protected int currentSmashWndTimeSeconds = 0;
+
+	/**
+	 * The start button widget
+	 */
+	protected AbstractPushbuttonWidget startButton = null;
 
 	/**
 	 * The exit button widget
@@ -144,6 +154,18 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 		gc.appendJs("}\n");
 	}
 
+	/**
+	 * Generates a human-readable string for the SmashWnd run time
+	 * 
+	 * @param smashWndTimeSeconds The SmashWnd run time in seconds
+	 * @return Human-readable string for the SmashWnd run time
+	 */
+	public String generateEventString(int smashWndTimeSeconds) {
+		int rv = smashWndTimeSeconds % 60;
+		String ret = "" + (smashWndTimeSeconds / 60) + ":" + (rv < 10 ? "0" : "") + rv;
+		return (ret);
+	}
+
 	@Override
 	public void dispatchStartEvent(UiEvent e, SessionDataApplicationToken sess, GraphicsContext gc) {
 
@@ -152,6 +174,8 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 		final IMetaverseTheme theme = gc.getCurrentTheme();
 
 		final IFont fontK = theme.getButtonFont();
+
+		currentSmashWndTimeSeconds = 0;
 
 		{
 			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0xff8000");
@@ -170,6 +194,15 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 
 			titleTextWidget = TextWidget.create(gc, twA);
 			titleTextWidget.addToScene(gc);
+		}
+
+		{
+			TextWidgetInitializer twB = new TextWidgetInitializer(theme);
+			twB.setDisplayText(generateEventString(currentSmashWndTimeSeconds));
+			twB.setPosition(new Vector3(0.0, 3.5, -7.0));
+
+			smashWndTimeTextWidget = TextWidget.create(gc, twB);
+			smashWndTimeTextWidget.addToScene(gc);
 		}
 
 		{
@@ -209,18 +242,22 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 
 		{
 			PushbuttonWidgetInitializer bwi = new PushbuttonWidgetInitializer(theme);
-			bwi.getLabelText().setDisplayText("Apply");
+			bwi.getLabelText().setDisplayText("Start");
 			bwi.setPosition(new Vector3(0.0, 3.5 - 1.0, -7.0));
 			bwi.setFocus(true);
-			applyButton = theme.createPushbutton(gc, bwi);
-			applyButton.addToScene(gc);
+			startButton = theme.createPushbutton(gc, bwi);
+			startButton.addToScene(gc);
 
-			focus.add("Apply Button", applyButton, new IEventHandler() {
+			focus.add("Start Button", startButton, new IEventHandler() {
 
 				@Override
 				public void dispatchEvent(UiEvent e, SessionDataApplicationToken sess, GraphicsContext gc) {
 
-					System.out.println("Handle Apply");
+					System.out.println("Handle Start");
+
+					System.out.println("SmashWnd Attempting SmashWnd Start");
+
+					gc.generateTimeout(1000);
 
 				}
 
@@ -279,6 +316,25 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	}
 
 	@Override
+	public void dispatchTimeoutEvent(UiEvent e, SessionDataApplicationToken sess, GraphicsContext gc) {
+
+		System.out.println("SmashWnd App Responding To Timeout Event");
+
+		int smashWndTimeSeconds = currentSmashWndTimeSeconds;
+
+		smashWndTimeSeconds++;
+
+		currentSmashWndTimeSeconds = smashWndTimeSeconds;
+
+		final int currentSmashWndTimeSeconds = smashWndTimeSeconds;
+
+		smashWndTimeTextWidget.setDisplayText(generateEventString(currentSmashWndTimeSeconds), gc);
+
+		gc.generateTimeout(1000);
+
+	}
+
+	@Override
 	public void stopApplication(UiEvent e, SessionDataApplicationToken sess, GraphicsContext gc) {
 
 		System.out.println("Smash Wnd App Responding To Stop Event");
@@ -287,6 +343,12 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 			titleTextWidget.removeFromScene(gc);
 
 			titleTextWidget.dispose(gc);
+		}
+
+		{
+			smashWndTimeTextWidget.removeFromScene(gc);
+
+			smashWndTimeTextWidget.dispose(gc);
 		}
 
 		{
@@ -325,9 +387,9 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 		 */
 
 		{
-			applyButton.removeFromScene(gc);
+			startButton.removeFromScene(gc);
 
-			applyButton.dispose(gc);
+			startButton.dispose(gc);
 		}
 
 		{

@@ -31,6 +31,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
 
 import codejcore.interfaces.CoreNames;
+import codejsvr.interfaces.SystemNames;
 
 /**
  * Class for instances of the web service to get the HTML content (index.html) of the CodeJ metaverse web application.
@@ -73,7 +74,7 @@ htmlBuilder.append( "\n"
 		+ "<body>\n"
 		+ "    <h1>Entering Another Metaverse Toolkit (AMET)</h1>\n"
 		+ "    \n"
-		+ "    <p>To learn more about this metaverse <A href=\"" + CoreNames.ABOUT_PAGE_PATH + "\">Click Here</A>\n"
+		+ "    <p>To learn more about this metaverse <A href=\"" + CoreNames.ABOUT_PAGE_PATH + SystemNames.getApplicationServiceTheme() + "\">Click Here</A>\n"
 		+ "    \n"
 		+ "</body>\n"
 		+ "<script type=\"module\" src=\"./" + CoreNames.VIRTUAL_REALITY_MAIN_JAVASCRIPT_PATH + "\"></script>\n"

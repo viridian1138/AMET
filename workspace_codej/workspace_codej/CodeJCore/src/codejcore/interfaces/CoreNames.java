@@ -79,6 +79,11 @@ public class CoreNames {
 	public static final String BROWSER_FAVORITE_ICON_PATH = "favicon.ico";
 
 	/**
+	 * Path for the content file defining the virtual reality environment
+	 */
+	public static final String VIRTUAL_REALITY_MAIN_CONTENT_PATH = "index";
+
+	/**
 	 * Path for the JS file defining the virtual reality environment
 	 */
 	public static final String VIRTUAL_REALITY_MAIN_JAVASCRIPT_PATH = "index_xr.js";
@@ -91,6 +96,6 @@ public class CoreNames {
 	/**
 	 * Path for the HTML page providing a description
 	 */
-	public static final String ABOUT_PAGE_PATH = "about.html";
+	public static final String ABOUT_PAGE_PATH = "about";
 
 }

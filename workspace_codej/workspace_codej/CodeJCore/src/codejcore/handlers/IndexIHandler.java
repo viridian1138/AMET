@@ -20,6 +20,7 @@ package codejcore.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
 
+import codejcore.interfaces.CoreNames;
 import codejsvr.interfaces.IHttpHandler;
 import codejsvr.interfaces.SystemNames;
 
@@ -34,7 +35,8 @@ public class IndexIHandler implements IHttpHandler {
 
 	@Override
 	public String getPath() {
-		return ("/" + SystemNames.METAVERSE_WEB_APPLICATION_PATH + "index.html");
+		return ("/" + SystemNames.METAVERSE_WEB_APPLICATION_PATH + 
+				CoreNames.VIRTUAL_REALITY_MAIN_CONTENT_PATH + SystemNames.getApplicationServiceTheme() );
 	}
 
 	@Override

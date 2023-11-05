@@ -28,4 +28,9 @@ public class PreferenceConstants {
 	 */
 	public static final String P_PORT_NUMBER = "portNumberPreference";
 
+	/**
+	 * Constant for the Code.J Web Server application service theme
+	 */
+	public static final String P_APPLICATION_SERVICE_THEME = "applicationServiceThemePreference";
+
 }

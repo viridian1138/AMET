@@ -34,7 +34,8 @@ public class AboutIHandler implements IHttpHandler {
 
 	@Override
 	public String getPath() {
-		return ("/" + SystemNames.METAVERSE_WEB_APPLICATION_PATH + CoreNames.ABOUT_PAGE_PATH);
+		return ("/" + SystemNames.METAVERSE_WEB_APPLICATION_PATH + CoreNames.ABOUT_PAGE_PATH
+				+ SystemNames.getApplicationServiceTheme());
 	}
 
 	@Override

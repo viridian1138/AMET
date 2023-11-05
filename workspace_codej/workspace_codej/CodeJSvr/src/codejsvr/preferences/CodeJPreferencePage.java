@@ -19,11 +19,13 @@
 package codejsvr.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import codejsvr.Activator;
+import codejsvr.interfaces.SystemNames;
 
 /**
  * This class represents a preference page that
@@ -62,6 +64,14 @@ public class CodeJPreferencePage extends FieldEditorPreferencePage implements IW
 	public void createFieldEditors() {
 		addField(new StringFieldEditor(PreferenceConstants.P_PORT_NUMBER, "Server Port Number : ",
 				getFieldEditorParent()));
+
+		addField(new RadioGroupFieldEditor(PreferenceConstants.P_APPLICATION_SERVICE_THEME,
+				"Application Service Theme : ", 1,
+				new String[][] { { "ASP", SystemNames.ApplicationServiceTheme.ASP.getSuffix() },
+						{ "JSP", SystemNames.ApplicationServiceTheme.JSP.getSuffix() },
+						{ "HTML", SystemNames.ApplicationServiceTheme.HTML.getSuffix() }
+
+				}, getFieldEditorParent(), true));
 	}
 
 	/*
