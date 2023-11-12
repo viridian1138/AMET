@@ -30,17 +30,18 @@ import codejcore.interfaces.UiEvent;
 import codejcore.widgets.AbstractPushbuttonWidget;
 import codejcore.widgets.BoxWidget;
 import codejcore.widgets.BoxWidgetInitializer;
+import codejcore.widgets.TetrahedronWidget;
+import codejcore.widgets.TetrahedronWidgetInitializer;
 import codejcore.widgets.EventHandlerNames;
 import codejcore.widgets.GraphicsContext;
 import codejcore.widgets.Material;
 import codejcore.widgets.MeshPhongMaterial;
 import codejcore.widgets.MeshPhongMaterialInitializer;
-import codejcore.widgets.PrismWidget;
-import codejcore.widgets.PrismWidgetInitializer;
 import codejcore.widgets.PushbuttonWidgetInitializer;
 import codejcore.widgets.TextWidget;
 import codejcore.widgets.TextWidgetInitializer;
 import codejcore.widgets.Vector3;
+import codejcore.widgets.Widget;
 
 /**
  * Class for instances of a Metaverse Application with elements resembling Smash
@@ -66,11 +67,69 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	 * Height of the center bucket in meters, which is shared with all buckets
 	 */
 	static final double BUCKET_L2_HEIGHT = 3;
+	
+	
+	/**
+	 * The far distance at which items are temporarily placed in meters.
+	 */
+	static final double TARGET_FAR_DIST = -10;
+	
+	
+	/**
+	 * The Y-Axis size of the jump hurdle in meters.
+	 */
+	static final double JUMP_HURDLE_SIZE_Y = 0.16;
+	
+	
+	/**
+	 * The size of the jump hurdle on the X and Z axes in meters.
+	 */
+	static final double JUMP_HURDLE_SIZE_XZ = 0.46;
+	
+	
+	/**
+	 * The axis size of the dumbbels in meters.
+	 */
+	static final double DUMBBELL_SIZE = 0.16;
+	
+	
+	/**
+	 * The axis size of the punch targets in meters.
+	 */
+	static final double TARGET_PUNCH_SIZE = 0.16;
+	
+	
+	/**
+	 * The radius of the kick targets in meters.
+	 */
+	static final double TARGET_KICK_SIZE = 0.16;
+	
+	
 
 	/**
 	 * Width of the center bucket in meters, which is shared with all buckets
 	 */
 	static final double BUCKET_L2_WIDTH = 1;
+	
+	/**
+	 * The maximum number of punch/kick targets
+	 */
+	static final int MAX_TARGETS = 18;
+	
+	/**
+	 * The maximum number of dumbbels
+	 */
+	static final int MAX_DUMBBELS = 6;
+	
+	/**
+	 * The maximum number of jump hurdles
+	 */
+	static final int MAX_JUMP_HURDLES = 6;
+	
+	/**
+	 * The maximum number of dodge columns
+	 */
+	static final int MAX_DODGE_COLUMNS = 2;
 
 	/**
 	 * Widget for displaying the title text
@@ -103,15 +162,26 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	protected BoxWidget bucketL3Widget = null;
 
 	/**
-	 * Prototype test prism widget
+	 * Material for the right targets
 	 */
-	protected PrismWidget prismWidget = null;
+	protected Material targetMaterialA = null;
 
 	/**
-	 * Prototype test prism widget material
+	 * Material for the left targets
 	 */
-	protected Material prismWidgetMaterial = null;
+	protected Material targetMaterialB = null;
 
+	/**
+	 * Material for the dumbbels
+	 */
+	protected Material dumbbellMaterialA = null;
+
+	/**
+	 * Material for the jump hurdles
+	 */
+	protected Material jumpHurdleMaterialA = null;
+
+	
 	/**
 	 * The current SmashWnd run time in seconds
 	 */
@@ -131,6 +201,90 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	 * The keyboard focus rotation for the metaverse application
 	 */
 	protected HorizontalFocusRotation focus = new HorizontalFocusRotation();
+	
+	
+	/**
+	 * An element that is moved by a strategy
+	 * 
+	 * @author tgreen
+	 *
+	 * @param <A> The widget moved by the element
+	 */
+	protected static class MovementElement<A extends Widget>
+	{
+		/**
+		 * The widget moved by the element
+		 */
+		protected A widget;
+
+		/**
+		 * Gets the widget moved by the element
+		 * 
+		 * @return The widget moved by the element
+		 */
+		public A getWidget() {
+			return widget;
+		}
+
+		/**
+		 * Sets the widget moved by the element
+		 * 
+		 * @param widget The widget moved by the element
+		 */
+		public void setWidget(A widget) {
+			this.widget = widget;
+		}
+		
+		
+		
+	}
+	
+	
+	/**
+	 * The right punch targets
+	 */
+	protected final MovementElement<BoxWidget>[] targetsPunchA = (MovementElement<BoxWidget>[])( new MovementElement[ MAX_TARGETS ] );
+	
+	
+	/**
+	 * The left punch targets
+	 */
+	protected final MovementElement<BoxWidget>[] targetsPunchB = (MovementElement<BoxWidget>[])( new MovementElement[ MAX_TARGETS ] );
+	
+	
+	/**
+	 * The right kick targets
+	 */
+	protected final MovementElement<TetrahedronWidget>[] targetsKickA = (MovementElement<TetrahedronWidget>[])( new MovementElement[ MAX_TARGETS ] );
+	
+	
+	/**
+	 * The left kick targets
+	 */
+	protected final MovementElement<TetrahedronWidget>[] targetsKickB = (MovementElement<TetrahedronWidget>[])( new MovementElement[ MAX_TARGETS ] );
+	
+	
+	/**
+	 * The dumbbels
+	 */
+	protected final MovementElement<BoxWidget>[] dumbbelsA = (MovementElement<BoxWidget>[])( new MovementElement[ MAX_DUMBBELS ] );
+	
+	
+	/**
+	 * The jump hurdles
+	 */
+	protected final MovementElement<BoxWidget>[] jumpHurdlesA = (MovementElement<BoxWidget>[])( new MovementElement[ MAX_JUMP_HURDLES ] );
+	
+	
+	/**
+	 * The dodge columns
+	 */
+	protected final MovementElement<BoxWidget>[] dodgeColumnsA = (MovementElement<BoxWidget>[])( new MovementElement[ MAX_DODGE_COLUMNS ] );
+	
+	
+	
+	
+	
 
 	/**
 	 * Default Constructor
@@ -169,23 +323,13 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	@Override
 	public void dispatchStartEvent(UiEvent e, SessionDataApplicationToken sess, GraphicsContext gc) {
 
-		gc.appendJs("	scene.background = new THREE.Color(0x77fefe);\n");
+		gc.appendJs("	scene.background = new THREE.Color(0x77b5fe);\n");
 
 		final IMetaverseTheme theme = gc.getCurrentTheme();
 
 		final IFont fontK = theme.getButtonFont();
 
 		currentSmashWndTimeSeconds = 0;
-
-		{
-			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0xff8000");
-			prismWidgetMaterial = MeshPhongMaterial.create(gc, minit);
-
-			final PrismWidgetInitializer pwi = new PrismWidgetInitializer(theme);
-			pwi.setMaterial(prismWidgetMaterial);
-			prismWidget = PrismWidget.create(gc, pwi);
-			prismWidget.addToScene(gc);
-		}
 
 		{
 			TextWidgetInitializer twA = new TextWidgetInitializer(theme);
@@ -239,6 +383,148 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 			bucketL3Widget = BoxWidget.create(gc, twB);
 			bucketL3Widget.addToScene(gc);
 		}
+
+		{
+			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0xe46a54");
+			targetMaterialA = MeshPhongMaterial.create(gc, minit);
+
+			targetMaterialA.setOwningObject(this);
+		}
+
+		{
+			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0xb4ecbb");
+			targetMaterialB = MeshPhongMaterial.create(gc, minit);
+
+			targetMaterialB.setOwningObject(this);
+		}
+
+		{
+			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0x252729");
+			dumbbellMaterialA = MeshPhongMaterial.create(gc, minit);
+
+			dumbbellMaterialA.setOwningObject(this);
+		}
+
+		{
+			MeshPhongMaterialInitializer minit = new MeshPhongMaterialInitializer(gc.getCurrentTheme(), "0xf1edc2");
+			jumpHurdleMaterialA = MeshPhongMaterial.create(gc, minit);
+
+			jumpHurdleMaterialA.setOwningObject(this);
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsPunchA.length ; cnt++ )
+			{
+				targetsPunchA[ cnt ] = new MovementElement<BoxWidget>();
+				
+				BoxWidgetInitializer twB = new BoxWidgetInitializer(theme);
+				twB.setLength(new Vector3(TARGET_PUNCH_SIZE, TARGET_PUNCH_SIZE, TARGET_PUNCH_SIZE));
+				twB.setMaterial(targetMaterialA);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				targetsPunchA[ cnt ].widget = BoxWidget.create(gc, twB);
+				targetsPunchA[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsPunchB.length ; cnt++ )
+			{
+				targetsPunchB[ cnt ] = new MovementElement<BoxWidget>();
+				
+				BoxWidgetInitializer twB = new BoxWidgetInitializer(theme);
+				twB.setLength(new Vector3(TARGET_PUNCH_SIZE, TARGET_PUNCH_SIZE, TARGET_PUNCH_SIZE));
+				twB.setMaterial(targetMaterialB);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				targetsPunchB[ cnt ].widget = BoxWidget.create(gc, twB);
+				targetsPunchB[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsKickA.length ; cnt++ )
+			{
+				targetsKickA[ cnt ] = new MovementElement<TetrahedronWidget>();
+				
+				TetrahedronWidgetInitializer twB = new TetrahedronWidgetInitializer(theme);
+				twB.setRadius(TARGET_KICK_SIZE);
+				twB.setMaterial(targetMaterialA);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				targetsKickA[ cnt ].widget = TetrahedronWidget.create(gc, twB);
+				targetsKickA[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsKickB.length ; cnt++ )
+			{
+				targetsKickB[ cnt ] = new MovementElement<TetrahedronWidget>();
+				
+				TetrahedronWidgetInitializer twB = new TetrahedronWidgetInitializer(theme);
+				twB.setRadius(TARGET_KICK_SIZE);
+				twB.setMaterial(targetMaterialB);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				targetsKickB[ cnt ].widget = TetrahedronWidget.create(gc, twB);
+				targetsKickB[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < dumbbelsA.length ; cnt++ )
+			{
+				dumbbelsA[ cnt ] = new MovementElement<BoxWidget>();
+				
+				BoxWidgetInitializer twB = new BoxWidgetInitializer(theme);
+				twB.setLength(new Vector3(DUMBBELL_SIZE, DUMBBELL_SIZE, DUMBBELL_SIZE));
+				twB.setMaterial(dumbbellMaterialA);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				dumbbelsA[ cnt ].widget = BoxWidget.create(gc, twB);
+				dumbbelsA[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < jumpHurdlesA.length ; cnt++ )
+			{
+				jumpHurdlesA[ cnt ] = new MovementElement<BoxWidget>();
+				
+				BoxWidgetInitializer twB = new BoxWidgetInitializer(theme);
+				twB.setLength(new Vector3(JUMP_HURDLE_SIZE_XZ, JUMP_HURDLE_SIZE_Y, JUMP_HURDLE_SIZE_XZ));
+				twB.setMaterial(jumpHurdleMaterialA);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				jumpHurdlesA[ cnt ].widget = BoxWidget.create(gc, twB);
+				jumpHurdlesA[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < dodgeColumnsA.length ; cnt++ )
+			{
+				dodgeColumnsA[ cnt ] = new MovementElement<BoxWidget>();
+				
+				BoxWidgetInitializer twB = new BoxWidgetInitializer(theme);
+				twB.setLength(new Vector3(BUCKET_L2_WIDTH, BUCKET_L2_HEIGHT, BUCKET_L2_WIDTH));
+				twB.setMaterial(bucketL2Material);
+				twB.setPosition(new Vector3(0, 1.5, TARGET_FAR_DIST));
+
+				dodgeColumnsA[ cnt ].widget = BoxWidget.create(gc, twB);
+				dodgeColumnsA[ cnt ].getWidget().addToScene(gc);
+			}
+		}
+		
+		
 
 		{
 			PushbuttonWidgetInitializer bwi = new PushbuttonWidgetInitializer(theme);
@@ -368,23 +654,92 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 
 			bucketL3Widget.dispose(gc);
 		}
+		
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsPunchA.length ; cnt++ )
+			{
+				targetsPunchA[ cnt ].getWidget().removeFromScene(gc);
+				targetsPunchA[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsPunchB.length ; cnt++ )
+			{
+				targetsPunchB[ cnt ].getWidget().removeFromScene(gc);
+				targetsPunchB[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsKickA.length ; cnt++ )
+			{
+				targetsKickA[ cnt ].getWidget().removeFromScene(gc);
+				targetsKickA[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < targetsKickB.length ; cnt++ )
+			{
+				targetsKickB[ cnt ].getWidget().removeFromScene(gc);
+				targetsKickB[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < dumbbelsA.length ; cnt++ )
+			{
+				dumbbelsA[ cnt ].getWidget().removeFromScene(gc);
+				dumbbelsA[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < jumpHurdlesA.length ; cnt++ )
+			{
+				jumpHurdlesA[ cnt ].getWidget().removeFromScene(gc);
+				jumpHurdlesA[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
+		{
+			for( int cnt = 0 ; cnt < dodgeColumnsA.length ; cnt++ )
+			{
+				dodgeColumnsA[ cnt ].getWidget().removeFromScene(gc);
+				dodgeColumnsA[ cnt ].getWidget().dispose(gc);
+			}
+		}
+		
+		
 
 		{
-			prismWidget.removeFromScene(gc);
-
-			prismWidget.dispose(gc);
-
-			prismWidgetMaterial.dispose(gc);
+			bucketL2Material.dispose(gc);
 		}
 
-		/*
-		 * { prototypeTestingMessageWidget2.removeFromScene(gc);
-		 * 
-		 * prototypeTestingMessageWidget2.dispose(gc);
-		 * 
-		 * 
-		 * prototypeTestingMessageWidgetMaterial2.dispose(gc); }
-		 */
+		{
+			targetMaterialA.dispose(gc);
+		}
+
+		{
+			targetMaterialB.dispose(gc);
+		}
+
+		{
+			dumbbellMaterialA.dispose(gc);
+		}
+
+		{
+			jumpHurdleMaterialA.dispose(gc);
+		}
 
 		{
 			startButton.removeFromScene(gc);
@@ -405,3 +760,5 @@ public class SmashWndAppInstance extends MetaverseApplicationInstance {
 	}
 
 }
+
+
